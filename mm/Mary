@@ -1,0 +1,106 @@
+import pyautogui
+import tkinter as tk
+import threading
+import time
+import webbrowser
+import cv2
+import numpy as np
+
+class EstadoRobot(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Estado del Robot")
+        self.geometry("350x100")
+        self.label = tk.Label(self, text="Esperando instrucciones...", font=("Arial", 14))
+        self.label.pack(pady=20)
+    
+    def actualizar_estado(self, texto):
+        self.label.config(text=texto)
+        self.update()
+
+def tarea_robot(ventana_estado):
+    ventana_estado.actualizar_estado("Abriendo navegador...")
+    webbrowser.open("http://aladm-web1/hris/notas")
+    time.sleep(4)  # Espera que se abra el navegador
+
+    ventana_estado.actualizar_estado("Moviendo el mouse a la barra de búsqueda...")
+    pyautogui.moveTo(300, 80, duration=1)
+    pyautogui.click()
+    time.sleep(1)
+
+    ventana_estado.actualizar_estado("Escribiendo búsqueda...")
+    pyautogui.write("A31100", interval=0.1)
+    pyautogui.press('enter')
+    time.sleep(2)
+
+    ventana_estado.actualizar_estado("Tarea terminada.")
+    time.sleep(3)
+    ventana_estado.actualizar_estado("Esperando instrucciones...")
+
+def tarea_robot_2(ventana_estado):
+    ventana_estado.actualizar_estado("Abriendo Google...")
+    webbrowser.open("https://www.google.com")
+    time.sleep(4)
+    ventana_estado.actualizar_estado("Moviendo el mouse al buscador...")
+    pyautogui.moveTo(400, 200, duration=1)
+    pyautogui.click()
+    time.sleep(1)
+    ventana_estado.actualizar_estado("Escribiendo búsqueda...")
+    pyautogui.write("Hola mundo", interval=0.1)
+    pyautogui.press('enter')
+    time.sleep(2)
+    ventana_estado.actualizar_estado("Tarea terminada.")
+    time.sleep(3)
+    ventana_estado.actualizar_estado("Esperando instrucciones...")
+
+def grabar_pantalla():
+    screen_size = pyautogui.size()
+    fourcc = cv2.VideoWriter_fourcc(*"XVID")
+    out = cv2.VideoWriter("grabacion.avi", fourcc, 20.0, screen_size)
+
+    for i in range(200):  # Graba 10 segundos aprox (200 frames a 20 fps)
+        img = pyautogui.screenshot()
+        frame = np.array(img)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        out.write(frame)
+
+    out.release()
+    cv2.destroyAllWindows()
+
+def asignar_tarea():
+    ventana_estado.actualizar_estado("Grabando pantalla y ejecutando tarea...")
+    # Inicia la grabación en un hilo
+    hilo_grabacion = threading.Thread(target=grabar_pantalla)
+    hilo_grabacion.start()
+    # Ejecuta la tarea en otro hilo
+    hilo_robot = threading.Thread(target=tarea_robot, args=(ventana_estado,))
+    hilo_robot.start()
+
+def reproducir_video():
+    import os
+    import subprocess
+    video_path = "grabacion.avi"
+    if os.path.exists(video_path):
+        ventana_estado.actualizar_estado("Reproduciendo video...")
+        subprocess.Popen(['start', video_path], shell=True)
+    else:
+        ventana_estado.actualizar_estado("No existe grabación.")
+
+if __name__ == "__main__":
+    ventana_estado = EstadoRobot()
+
+    boton_asignar = tk.Button(ventana_estado, text="Grabar pantalla", command=asignar_tarea)
+    boton_asignar.pack(pady=5)
+
+    boton_reproducir = tk.Button(ventana_estado, text="Reproducir grabación", command=reproducir_video)
+    boton_reproducir.pack(pady=5)
+
+    # Botón para ejecutar otra tarea
+    def ejecutar_tarea_2():
+        hilo_robot_2 = threading.Thread(target=tarea_robot_2, args=(ventana_estado,))
+        hilo_robot_2.start()
+
+    boton_tarea_2 = tk.Button(ventana_estado, text="Ejecutar otra tarea", command=ejecutar_tarea_2)
+    boton_tarea_2.pack(pady=5)
+
+    ventana_estado.mainloop()

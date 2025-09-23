@@ -1,0 +1,17 @@
+def fibonacci(n):
+    # Define una función llamada fibonacci que toma un entero n como entrada, 
+    # representando el número de números de Fibonacci a generar.
+    a, b = 0, 1
+    # Inicializa dos variables, a y b, a 0 y 1 respectivamente. 
+    # Estas almacenarán los números de Fibonacci actual y siguiente.
+    for _ in range(n):
+        # Inicia un bucle que itera n veces. 
+        # El _ se usa como un nombre de variable cuando el contador del bucle no se usa explícitamente.
+        print(a, end=' ')
+        # Imprime el número de Fibonacci actual (a) seguido de un espacio. 
+        # El argumento end=' ' asegura que los números se impriman en la misma línea, separados por espacios.
+        a, b = b, a + b
+        # Actualiza a y b para calcular el siguiente número de Fibonacci. 
+        # a se convierte en el valor anterior de b, y b se convierte en la suma de los valores anteriores de a y b.
+fibonacci(10)
+# Llama a la función fibonacci con n=5 para generar los primeros 5 números de fibonacci.
