@@ -18,7 +18,7 @@ def resize_to_square(image, size=800):
 
 # 📷 Cargar imagen y preparar
 img = cv2.imread(
-    r"C:\Users\AOAL129300\OneDrive - ALPSGROUP\Documents\test\shoot_194_l_tbd.jpg"
+    r"C:\Users\AOAL129300\OneDrive - ALPSGROUP\Documents\test\shoot_195_l_tbd.jpg"
 )  # ← Ajusta esta ruta
 img = resize_to_square(img, 800)
 h, w = img.shape[:2]
