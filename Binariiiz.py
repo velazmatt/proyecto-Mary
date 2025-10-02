@@ -13,7 +13,7 @@ def resize_to_square(image, size=800):
     return cv2.resize(square, (size, size), interpolation=cv2.INTER_AREA)
 
 # 📷 Cargar imagen y preparar 
-img_path = r"C:\Users\AOAL129300\OneDrive - ALPSGROUP\Documents\test\shoot_199_l_tbd.jpg"  # ← Ajusta esta ruta
+img_path = r"C:\Users\AOAL129300\OneDrive - ALPSGROUP\Documents\test\shoot_163_r_tbd.jpg"  # ← Ajusta esta ruta
 img = cv2.imread(img_path)
 if img is None:
     print(f"ERROR: No se pudo cargar la imagen en {img_path}\nVerifica la ruta, el nombre de archivo y que el archivo existe.")
